@@ -51,10 +51,10 @@
         }
       },
       created() {
+        this.probeType = 3;
         this.touch = {};
         this.listHeight = [];
-        this.listenScroll = true;
-        this.probeType = 3
+        this.listenScroll = true
       },
       watch:{
         data() {
@@ -73,11 +73,11 @@
             let height2 = listHeight[i+1];
             if (-newY >= heigth1 && -newY < height2) {
               this.currentIndex = i;
-              this.diff = height2 + newY
+              this.diff = height2 + newY;
               return
             }
-            this.currentIndex = listHeight.length - 2
           }
+          this.currentIndex = listHeight.length - 2
         }
       },
       computed:{
@@ -102,6 +102,9 @@
           let anchorIndex = parseInt(this.touch.anchorIndex) + delta;
           this._scrollTo(anchorIndex)
         },
+        refresh() {
+          this.$refs.listview.refresh()
+        },
         scroll(pos) {
           this.scrollY = pos.y
         },
@@ -124,8 +127,9 @@
           this.listHeight.push(height)
           for (let i = 0; i < list.length; i++) {
             let item = list[i];
-            height += item.clientWidth;
+            height += item.clientHeight;
             this.listHeight.push(height)
+            console.log(height)
           }
         }
       }
@@ -175,6 +179,6 @@
         line-height 1
         color $color-text-l
         font-size $font-size-small
-        & current
+        &.current
           color $color-background
 </style>
