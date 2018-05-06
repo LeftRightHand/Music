@@ -52,9 +52,9 @@
         })
       },
     activated() {
-      // if (this.autoPlay) {
-      //   this._play()
-      // }
+      if (this.autoPlay) {
+        this._play()
+      }
     },
     deactivated() {
       clearTimeout(this.timer)
