@@ -9,7 +9,7 @@
         <li v-for="group in data" class="list-group" ref="listGroup">
           <h2 class="list-group-title">{{group.title}}</h2>
           <ul>
-            <li v-for="item in group.items" class="list-group-itme">
+            <li @click="selectItem(item)" v-for="item in group.items" class="list-group-itme">
               <img v-lazy="item.avatar" class="avatar">
               <span class="name">{{item.name}}</span>
             </li>
@@ -23,6 +23,12 @@
           </li>
         </ul>
       </div>
+      <div class="list-fixed" ref="fixed" v-show="fixedTitle">
+        <div class="fixed-title">{{fixedTitle}}</div>
+      </div>
+      <div v-show="!data.length" class="loading-container">
+        <loading></loading>
+      </div>
     </scroll>
 </template>
 
@@ -30,12 +36,16 @@
 
   import Scroll from "../scroll/scroll";
   import {getData} from "../../common/js/dom";
+  import Loading from "../loading/loading";
 
   const TILTLE_HEIGHT = 30
   const AHCHOR_HEIGHT = 18
 
     export default {
-      components: {Scroll},
+      components: {
+        Loading,
+        Scroll,
+      },
       name: "listview",
       props:{
         data:{
@@ -77,7 +87,15 @@
               return
             }
           }
-          this.currentIndex = listHeight.length - 2
+          this.currentIndex = listHeight.length
+        },
+        diff(newVal) {
+          let fixedTop = (newVal > 0 && newVal < TILTLE_HEIGHT) ? newVal - TILTLE_HEIGHT : 0
+          if (this.fixedTop === fixedTop) {
+            return
+          }
+          this.fixedTop = fixedTop
+          this.$refs.fixed.style.transform = `translate3d(0,${fixedTop}px,0)`
         }
       },
       computed:{
@@ -85,14 +103,23 @@
           return this.data.map((group)=>{
             return group.title.substr(0,1)
           })
+        },
+        fixedTitle() {
+          if (this.scrollY > 0) {
+            return ''
+          }
+          return this.data[this.currentIndex] ? this.data[this.currentIndex].title : ""
         }
       },
       methods:{
+        selectItem(item) {
+          this.$emit('select', item)
+        },
         onShortcutTouchStart(e) {
           let anchorIndex = getData(e.target, 'index');
           let firstTouch = e.touches[0];
-          this.touch.y1 = firstTouch.pageY
-          this.touch.anchorIndex = anchorIndex
+          this.touch.y1 = firstTouch.pageY;
+          this.touch.anchorIndex = anchorIndex;
           this._scrollTo(anchorIndex)
         },
         onShortcutTouchMove(e) {
@@ -117,18 +144,18 @@
           // } else if (index > this.listHeight.length - 2) {
           //   index = this.listHeight.length - 2
           // }
-          // this.scrollY = -this.listHeight[index];
+          this.scrollY = -this.listHeight[index];
           this.$refs.listview.scrollToElement(this.$refs.listGroup[index], 0)
         },
         _calculateHeight() {
-          this.listHeight = []
+          this.listHeight = [];
           const list = this.$refs.listGroup;
           let height = 0;
-          this.listHeight.push(height)
+          this.listHeight.push(height);
           for (let i = 0; i < list.length; i++) {
             let item = list[i];
             height += item.clientHeight;
-            this.listHeight.push(height)
+            this.listHeight.push(height);
             console.log(height)
           }
         }
@@ -181,4 +208,21 @@
         font-size $font-size-small
         &.current
           color $color-background
+    .list-fixed
+      position absolute
+      top 0
+      left 0
+      width 100%
+      .fixed-title
+        height 30px
+        line-height 30px
+        padding-left 20px
+        font-size $font-size-small
+        color $color-text-l
+        background $color-highlight-background
+  .loading-container
+    position: absolute
+    width: 100%
+    top: 50%
+    transform: translateY(-50%)
 </style>
