@@ -57,7 +57,6 @@
             let me = this;
             this.scroll.on('scroll', (pos)=>{
               me.$emit('scroll', pos)
-              console.log(pos.y)
             })
           }
         },

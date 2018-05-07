@@ -156,7 +156,6 @@
             let item = list[i];
             height += item.clientHeight;
             this.listHeight.push(height);
-            console.log(height)
           }
         }
       }
