@@ -23,7 +23,7 @@ export function getSingerDetail(singerId) {
     hostUin: 0,
     needNewCode: 1,
     platform: 'h5page',
-    num: 15,
+    num: 30,
     begin: 0,
     order: 'listen',
     from: 'h5',
