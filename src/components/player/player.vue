@@ -11,10 +11,12 @@
           <h1 class="title" v-html="currentSong.name"></h1>
           <h2 class="subtitle" v-html="currentSong.singer"></h2>
         </div>
-        <div class="middle-l" ref="middleL">
-          <div class="cd-wrapper" ref="cdWrapper">
-            <div class="cd">
-              <img class="image" :src="currentSong.image">
+        <div class="middle">
+          <div class="middle-l" ref="middleL">
+            <div class="cd-wrapper" ref="cdWrapper">
+              <div class="cd">
+                <img class="image" :src="currentSong.image">
+              </div>
             </div>
           </div>
         </div>
@@ -91,21 +93,56 @@
 
   .icon-back
     display block
-    padding 10px
+    padding 20px
     transform rotate(-90deg)
     color $color-text
     font-size $font-size-large-x
   .title
     width 70%
+    top 20
     margin 0 auto
-    line-height 40px
+    line-height 60px
     text-align center
     color $color-text
     no-wrap()
     font-size: $font-size-large
   .subtitle
-    line-height: 20px
+    line-height: 10px
     text-align: center
     font-size: $font-size-medium
     color: $color-text
+
+  .middle
+    position fixed
+    width 100%
+    top  100px
+    bottom 170px
+    white-space nowrap
+    font-size 0
+  .middle-l
+    display inline-block
+    vertical-align top
+    position relative
+    width 100%
+    height 0
+    padding-top 80%
+  .cd-wrapper
+    position absolute
+    left 10%
+    top 0
+    width 80%
+    height 100%
+    .cd
+      width 100%
+      height 100%
+      box-sizing border-box
+      border 10px solid rgba(255, 255, 255, 0.1)
+      border-radius: 50%
+    .image
+      position absolute
+      left 0
+      top 0
+      width 100%
+      height 100%
+      border-radius 50%
 </style>
