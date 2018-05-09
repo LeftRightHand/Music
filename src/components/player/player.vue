@@ -20,8 +20,49 @@
             </div>
           </div>
         </div>
+        <div class="bottom">
+          <div class="dot-wrapper">
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
+          <div class="progress-wrapper">
+            <span class="time time-l"></span>
+            <div class="progress-bar-wrapper">
+
+            </div>
+            <span class="time time-r"></span>
+          </div>
+          <div class="operators">
+            <div>
+              <div class="icon i-left">
+                <i></i>
+              </div>
+              <div class="icon i-center">
+                <i class="icon-prev"></i>
+              </div>
+              <div class="icon i-right">
+                <i class="icon-next"></i>
+              </div>
+              <div class="icon i-right">
+                <i class="icon"></i>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="mini-player" v-show="!fullScreen"></div>
+      <div class="mini-player" v-show="!fullScreen">
+        <div class="icon">
+          <img width="40" height="40" :src="currentSong.image">
+        </div>
+        <div class="text">
+          <h2 class="name" v-html="currentSong.name"></h2>
+          <p class="desc" v-html="currentSong.singer"></p>
+        </div>
+        <div class="control"></div>
+        <div class="control">
+          <i class="icon-playlist"></i>
+        </div>
+      </div>
     </div>
 </template>
 
@@ -83,8 +124,8 @@
     bottom 0
     width 100%
     height 60px
-    background black
-
+    background white
+    border 1px solid rgba(0,0,0,0.1)
   .back
     position absolute
     top 20
@@ -145,4 +186,21 @@
       width 100%
       height 100%
       border-radius 50%
+
+  .bottom
+    position absolute
+    bottom 50px
+    width 100%
+  .dor-wrapper
+    text-align center
+    font-size 0
+    .dot
+      display inline-block
+      vertical-align middle
+      margin 0 4px
+      width 8px
+      height 8px
+      border-radius 50%
+      background white
+
 </style>
