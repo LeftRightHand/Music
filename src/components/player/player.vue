@@ -19,7 +19,7 @@
           <div class="middle">
             <div class="middle-l" ref="middleL">
               <div class="cd-wrapper" ref="cdWrapper">
-                <div class="cd">
+                <div class="cd" :class="cdCls">
                   <img class="image" :src="currentSong.image">
                 </div>
               </div>
@@ -40,13 +40,13 @@
             <div class="operators">
               <div>
                 <div class="icon i-left">
-                  <i></i>
+                  <i class="icon-sequence"></i>
                 </div>
                 <div class="icon i-left" :class="disableCls">
                   <i class="icon-prev"></i>
                 </div>
                 <div class="icon i-center" :class="disableCls">
-                  <i :class="playIcon"></i>
+                  <i :class="playIcon" @click="togglePlaying"></i>
                 </div>
                 <div class="icon i-right" :class="disableCls">
                   <i class="icon-next"></i>
@@ -62,20 +62,21 @@
       <transition name="mini">
         <div class="mini-player" v-show="!fullScreen" @click="open">
           <div class="icon">
-            <img width="40" height="40" :src="currentSong.image">
+            <img :class="cdCls" width="40" height="40" :src="currentSong.image">
           </div>
           <div class="text">
             <h2 class="name" v-html="currentSong.name"></h2>
             <p class="desc" v-html="currentSong.singer"></p>
           </div>
           <div class="control">
-            <i class="icon-mini"></i>
+            <i @click.stop="togglePlaying" class="icon-mini" :class="miniIcon"></i>
           </div>
           <div class="control">
             <i class="icon-playlist"></i>
           </div>
         </div>
       </transition>
+      <audio ref="audio" :src="currentSong.url" @play="ready"></audio>
     </div>
 </template>
 
@@ -89,12 +90,23 @@
 
     export default {
       name: "player",
+      data() {
+        return {
+          songReady: false,
+        }
+      },
       computed: {
+        cdCls() {
+          return this.playing ? 'play' : 'play pause'
+        },
         playIcon() {
           return this.playing ? 'icon-pause' : 'icon-play'
         },
+        miniIcon() {
+          return this.playing ? 'icon-pause-mini' : 'icon-play-mini'
+        },
         disableCls() {
-
+          return this.songReady ? '' : 'disable'
         },
         ...mapGetters([
           'currentIndex',
@@ -105,6 +117,9 @@
         ])
       },
       methods: {
+        togglePlaying() {
+          this.setPlayingState(!this.playing)
+        },
         open() {
           this.setFullScreen(true)
         },
@@ -150,6 +165,9 @@
           this.$refs.cdWrapper.style.transition = '';
           this.$refs.cdWrapper.style[transform] = ''
         },
+        ready() {
+
+        },
         _getPosAndScale() {
           const targetWidth = 40;
           const paddingLeft = 40;
@@ -166,11 +184,20 @@
           }
         },
         ...mapMutations({
-          setFullScreen: 'SET_FULL_SCREEN'
+          setFullScreen: 'SET_FULL_SCREEN',
+          setPlayingState:'SET_PLAYING_STATE'
         }),
         ...mapActions({
 
-        })
+        }),
+      },
+      watch: {
+        playing(newPlaying) {
+          const audio = this.$refs.audio;
+          this.$nextTick(()=>{
+            newPlaying ? audio.play() : audio.pause()
+          })
+        }
       }
     }
 </script>
@@ -251,13 +278,17 @@
       box-sizing border-box
       border 10px solid rgba(255, 255, 255, 0.1)
       border-radius: 50%
-    .image
-      position absolute
-      left 0
-      top 0
-      width 100%
-      height 100%
-      border-radius 50%
+      &.play
+        animation rotate 20s linear infinite
+      &.pause
+        animation-play-state paused
+      .image
+        position absolute
+        left 0
+        top 0
+        width 100%
+        height 100%
+        border-radius 50%
 
   .bottom
     position absolute
@@ -278,10 +309,14 @@
       display flex
       align-items center
       justify-content center
+      margin-left auto
+      margin-right auto
       .icon
         flex 1
         color: white
         display inline-block
+        margin-left 10px
+        margin-right 10px
         i
          font-size 35px
       .i-left
@@ -312,37 +347,41 @@
     height 60px
     background white
     border 1px solid rgba(0,0,0,0.1)
-  .icon
-    flex 0 0 40px
-    width 40px
-    padding 0 10px 0 20px
-    img
-      border-radius 50%
-  .text
-    display flex
-    flex-direction column
-    justify-content center
-    flex 1
-    line-height 20px
-    overflow hidden
-    .name
-      margin-bottom 2px
-      no-wrap()
-      font-size: $font-size-medium
-    .desc
-      no-wrap()
-      font-size: $font-size-small
-  .control
-    flex 0 0 30px
-    width 30px
-    padding 0 10px
-  .icon-play-mini, .icon-pause-mini, .icon-playlist
-    font-size: 25px
-  .icon-mini
-    font-size: 32px
-    position: absolute
-    left: 0
-    top: 0
+    .icon
+      flex 0 0 40px
+      width 40px
+      padding 0 10px 0 20px
+      img
+        border-radius 50%
+        &.play
+          animation: rotate 10s linear infinite
+        &.pause
+          animation-play-state: paused
+    .text
+      display flex
+      flex-direction column
+      justify-content center
+      flex 1
+      line-height 20px
+      overflow hidden
+      .name
+        margin-bottom 2px
+        no-wrap()
+        font-size: $font-size-medium
+      .desc
+        no-wrap()
+        font-size: $font-size-small
+    .control
+      flex 0 0 30px
+      width 30px
+      padding 0 10px
+      .icon-play-mini, .icon-pause-mini, .icon-playlist
+        font-size: 30px
 
+  @keyframes rotate
+    0%
+      transform rotate(0)
+    100%
+      transform rotate(360deg)
 
 </style>

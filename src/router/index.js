@@ -1,10 +1,25 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Recommend from '../views/recommend/recommend'
-import Singer from '../views/singer/singer'
-import SingerDetail from '../views/singer-detail/singer-detail'
 
 Vue.use(Router)
+
+const Recommend = ((resolve)=>{
+  import('../views/recommend/recommend').then((module)=>{
+    resolve(module)
+  })
+});
+
+const Singer = ((resolve)=>{
+  import('../views/singer/singer').then((module)=>{
+    resolve(module)
+  })
+});
+
+const SingerDetail = ((resolve)=>{
+  import('../views/singer-detail/singer-detail').then((module)=>{
+    resolve(module)
+  })
+});
 
 export default new Router({
   routes: [
