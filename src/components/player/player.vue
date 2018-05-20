@@ -39,9 +39,9 @@
             </div>
             <div class="operators">
               <div>
-                <div class="icon i-left">
-                  <i class="icon-sequence"></i>
-                </div>
+                <!--<div class="icon i-left">-->
+                  <!--<i class="icon-sequence"></i>-->
+                <!--</div>-->
                 <div class="icon i-left" :class="disableCls">
                   <i class="icon-prev"></i>
                 </div>
