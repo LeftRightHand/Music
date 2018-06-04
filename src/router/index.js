@@ -21,6 +21,12 @@ const SingerDetail = ((resolve)=>{
   })
 });
 
+const Search = (resolve) => {
+  import('../views/search/search').then((module)=>{
+    resolve(module)
+  })
+};
+
 export default new Router({
   routes: [
     {
@@ -45,5 +51,9 @@ export default new Router({
       path: '/singer-detail',
       component: SingerDetail,
     },
+    {
+      path: '/search',
+      component: Search,
+    }
   ]
 })
